@@ -247,6 +247,76 @@ public class DataTuple {
 		return DiscreteTag.DiscretizeDouble(aux);
 	}
 
+	public String sameDirection(MOVE ghostDirection) {
+		if(ghostDirection == this.DirectionChosen) return "YES";
+		else return "NO";
+	}
+
+	public String discreteBoolean(boolean b) {
+		if(b) return "YES";
+		else return "NO";
+	}
+
+	public String getAttributeValue(String attribute) {
+		String returnString = "";
+		switch(attribute) {
+			case "isBlinkyEdible":
+				returnString = discreteBoolean(this.isBlinkyEdible);
+				break;
+			case "isInkyEdible":
+				returnString = discreteBoolean(this.isInkyEdible);
+				break;
+			case "isPinkyEdible":
+				returnString = discreteBoolean(this.isPinkyEdible);
+				break;
+			case "isSueEdible":
+				returnString = discreteBoolean(this.isSueEdible);
+				break;
+			case "blinkyDist":
+//				returnString = discreteDistance(this.blinkyDist);
+				returnString = discretizeDistance(this.blinkyDist).toString();
+				break;
+			case "inkyDist":
+//				returnString = discreteDistance(this.inkyDist);
+				returnString = discretizeDistance(this.inkyDist).toString();
+				break;
+			case "pinkyDist":
+//				returnString = discreteDistance(this.pinkyDist);
+				returnString = discretizeDistance(this.pinkyDist).toString();
+				break;
+			case "sueDist":
+//				returnString = discreteDistance(this.sueDist);
+				returnString = discretizeDistance(this.sueDist).toString();
+				break;
+			case "blinkyDir":
+				returnString = this.blinkyDir.toString();
+				break;
+			case "inkyDir":
+				returnString = this.inkyDir.toString();
+				break;
+			case "pinkyDir":
+				returnString = this.pinkyDir.toString();
+				break;
+			case "sueDir":
+				returnString = this.sueDir.toString();
+				break;
+			case "blinkySameDir":
+				returnString = sameDirection(this.blinkyDir);
+				break;
+			case "inkySameDir":
+				returnString = sameDirection(this.inkyDir);
+				break;
+			case "pinkySameDir":
+				returnString = sameDirection(this.pinkyDir);
+				break;
+			case "sueSameDir":
+				returnString = sameDirection(this.sueDir);
+				break;
+
+		}
+		return returnString;
+	}
+
 	/**
 	 * 
 	 * Max score value lifted from highest ranking PacMan controller on PacMan
