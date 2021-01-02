@@ -42,6 +42,11 @@ public class DataTuple {
 	public int pinkyIndex;
 	public int sueIndex;
 	public boolean isJunction;
+	public boolean moveRight = false;
+	public boolean moveLeft= false;
+	public boolean moveUp= false;
+	public boolean moveDown= false;
+	public MOVE lastMove;
 
 	// Ghost this, dir, dist, edible - BLINKY, INKY, PINKY, SUE
 	public boolean isBlinkyEdible = false;
@@ -87,6 +92,26 @@ public class DataTuple {
 		this.sueIndex = game.getGhostCurrentNodeIndex(GHOST.SUE);
 		this.isJunction = game.isJunction(this.pacmanPosition);
 
+		MOVE[] moves = game.getPossibleMoves(this.pacmanPosition);
+
+		for(MOVE moveTemp: moves){
+			switch (moveTemp){
+				case LEFT:
+					this.moveLeft = true;
+					break;
+				case RIGHT:
+					this.moveRight = true;
+					break;
+				case UP:
+					this.moveUp = true;
+					break;
+				case DOWN:
+					this.moveDown = true;
+					break;
+			}
+
+		}
+		lastMove = game.getPacmanLastMoveMade();
 		if (game.getGhostLairTime(GHOST.BLINKY) == 0) {
 			this.isBlinkyEdible = game.isGhostEdible(GHOST.BLINKY);
 			this.blinkyDist = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.BLINKY));
@@ -147,6 +172,11 @@ public class DataTuple {
 		this.numberOfTotalPillsInLevel = Integer.parseInt(dataSplit[23]);
 		this.numberOfTotalPowerPillsInLevel = Integer.parseInt(dataSplit[24]);
 		this.isJunction = Boolean.parseBoolean(dataSplit[25]);
+		this.moveRight = Boolean.parseBoolean(dataSplit[26]);
+		this.moveLeft = Boolean.parseBoolean(dataSplit[27]);
+		this.moveUp = Boolean.parseBoolean(dataSplit[28]);
+		this.moveDown = Boolean.parseBoolean(dataSplit[29]);
+		this.lastMove = MOVE.valueOf(dataSplit[30]);
 
 	}
 
@@ -179,6 +209,12 @@ public class DataTuple {
 		stringbuilder.append(this.numberOfTotalPillsInLevel + ";");
 		stringbuilder.append(this.numberOfTotalPowerPillsInLevel + ";");
 		stringbuilder.append(this.isJunction + ";");
+		stringbuilder.append(this.moveRight + ";");
+		stringbuilder.append(this.moveLeft + ";");
+		stringbuilder.append(this.moveUp + ";");
+		stringbuilder.append(this.moveDown + ";");
+		stringbuilder.append(this.lastMove + ";");
+
 
 		return stringbuilder.toString();
 	}
@@ -319,7 +355,6 @@ public class DataTuple {
 			case "blinkyDist":
 //				returnString = discreteDistance(this.blinkyDist);
 				returnString = discretizeDistance(this.blinkyDist).toString();
-				System.out.println(returnString);
 				break;
 			case "inkyDist":
 //				returnString = discreteDistance(this.inkyDist);
@@ -362,6 +397,25 @@ public class DataTuple {
 				break;
 			case "isJunction":
 				returnString = discreteBoolean(this.isJunction);
+				break;
+
+			case "pacmanPosition":
+				returnString = discretizePosition(pacmanPosition).toString();
+				break;
+			case "moveLeft":
+				returnString = discreteBoolean(this.moveLeft);
+				break;
+			case "moveRight":
+				returnString = discreteBoolean(this.moveRight);
+				break;
+			case "moveDown":
+				returnString = discreteBoolean(this.moveDown);
+				break;
+			case "moveUp":
+				returnString = discreteBoolean(this.moveUp);
+				break;
+			case "lastMove":
+				returnString = lastMove.toString();
 				break;
 
 		}

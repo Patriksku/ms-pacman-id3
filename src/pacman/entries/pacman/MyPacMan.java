@@ -16,7 +16,7 @@ import java.util.*;
  * be placed in this package or sub-packages (e.g., game.entries.pacman.mypackage).
  */
 public class MyPacMan extends Controller<MOVE> {
-    double percentageOfTrainingData = 0.1;
+    double percentageOfTrainingData = 0.0;
     ArrayList<DataTuple> trainingData = new ArrayList<>();
     ArrayList<DataTuple> testData = new ArrayList<>();
     Node node;
@@ -89,11 +89,17 @@ public class MyPacMan extends Controller<MOVE> {
         attributes.put("inkyDir", directions);
         attributes.put("pinkyDir", directions);
         attributes.put("sueDir", directions);
-//		attributes.put("blinkySameDir", yesOrNo);
-//		attributes.put("inkySameDir", yesOrNo);
-//		attributes.put("pinkySameDir", yesOrNo);
-//		attributes.put("sueSameDir", yesOrNo);
+		//attributes.put("blinkySameDir", yesOrNo);
+		//attributes.put("inkySameDir", yesOrNo);
+		//attributes.put("pinkySameDir", yesOrNo);
+		//attributes.put("sueSameDir", yesOrNo);
 		attributes.put("isJunction", yesOrNo);
+		attributes.put("moveLeft",yesOrNo);
+        attributes.put("moveRight",yesOrNo);
+        attributes.put("moveUp",yesOrNo);
+        attributes.put("moveDown",yesOrNo);
+        attributes.put("pacmanPosition",discreteDistance);
+        attributes.put("lastMove", directions);
 
         classOfAttributes.add("UP");
         classOfAttributes.add("LEFT");
@@ -345,6 +351,13 @@ public class MyPacMan extends Controller<MOVE> {
                     break;
                 }
             }
+        }
+        ArrayList<MOVE> tempMove = new ArrayList<MOVE>(Arrays.asList(game.getPossibleMoves(game.getPacmanCurrentNodeIndex())));
+        if(!tempMove.contains(MOVE.valueOf(move))){
+            System.out.println("test");
+            Random ran = new Random();
+
+            move = tempMove.get(ran.nextInt(tempMove.size())).toString();
         }
 		return MOVE.valueOf(move);
 	}
