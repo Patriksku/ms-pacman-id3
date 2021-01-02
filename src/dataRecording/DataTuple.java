@@ -37,6 +37,11 @@ public class DataTuple {
 	public int currentLevelTime;
 	public int numOfPillsLeft;
 	public int numOfPowerPillsLeft;
+	public int blinkyIndex;
+	public int inkyIndex;
+	public int pinkyIndex;
+	public int sueIndex;
+	public boolean isJunction;
 
 	// Ghost this, dir, dist, edible - BLINKY, INKY, PINKY, SUE
 	public boolean isBlinkyEdible = false;
@@ -76,6 +81,11 @@ public class DataTuple {
 		this.currentLevelTime = game.getCurrentLevelTime();
 		this.numOfPillsLeft = game.getNumberOfActivePills();
 		this.numOfPowerPillsLeft = game.getNumberOfActivePowerPills();
+		this.blinkyIndex = game.getGhostCurrentNodeIndex(GHOST.BLINKY);
+		this.inkyIndex = game.getGhostCurrentNodeIndex(GHOST.INKY);
+		this.pinkyIndex = game.getGhostCurrentNodeIndex(GHOST.PINKY);
+		this.sueIndex = game.getGhostCurrentNodeIndex(GHOST.SUE);
+		this.isJunction = game.isJunction(this.pacmanPosition);
 
 		if (game.getGhostLairTime(GHOST.BLINKY) == 0) {
 			this.isBlinkyEdible = game.isGhostEdible(GHOST.BLINKY);
@@ -136,6 +146,8 @@ public class DataTuple {
 		this.numberOfNodesInLevel = Integer.parseInt(dataSplit[22]);
 		this.numberOfTotalPillsInLevel = Integer.parseInt(dataSplit[23]);
 		this.numberOfTotalPowerPillsInLevel = Integer.parseInt(dataSplit[24]);
+		this.isJunction = Boolean.parseBoolean(dataSplit[25]);
+
 	}
 
 	public String getSaveString() {
@@ -166,6 +178,7 @@ public class DataTuple {
 		stringbuilder.append(this.numberOfNodesInLevel + ";");
 		stringbuilder.append(this.numberOfTotalPillsInLevel + ";");
 		stringbuilder.append(this.numberOfTotalPowerPillsInLevel + ";");
+		stringbuilder.append(this.isJunction + ";");
 
 		return stringbuilder.toString();
 	}
@@ -174,7 +187,7 @@ public class DataTuple {
 	 * Used to normalize distances. Done via min-max normalization. Supposes
 	 * that minimum possible distance is 0. Supposes that the maximum possible
 	 * distance is 150.
-	 * 
+	 *
 	 * @param dist
 	 *            Distance to be normalized
 	 * @return Normalized distance
@@ -247,13 +260,44 @@ public class DataTuple {
 		return DiscreteTag.DiscretizeDouble(aux);
 	}
 
-	public String sameDirection(MOVE ghostDirection) {
-		if(ghostDirection == this.DirectionChosen) return "YES";
-		else return "NO";
+	/**
+	 *
+	 * Max score value lifted from highest ranking PacMan controller on PacMan
+	 * vs Ghosts website: http://pacman-vs-ghosts.net/controllers/1104
+	 *
+	 * @param score
+	 * @return
+	 */
+	public double normalizeCurrentScore(int score) {
+		return ((score - 0) / (double) (82180 - 0)) * (1 - 0) + 0;
+	}
+
+	public DiscreteTag discretizeCurrentScore(int score) {
+		double aux = this.normalizeCurrentScore(score);
+		return DiscreteTag.DiscretizeDouble(aux);
+	}
+
+	public String discreteDistance(int distance) {
+		String returnString = "";
+		if(distance <= 20 && distance >= 0) {
+			returnString = "LOW";
+		}
+		else if(distance > 20 && distance < 50) {
+			returnString = "MEDIUM";
+		}
+		else {
+			returnString = "HIGH";
+		}
+		return returnString;
 	}
 
 	public String discreteBoolean(boolean b) {
 		if(b) return "YES";
+		else return "NO";
+	}
+
+	public String sameDirection(MOVE ghostDirection) {
+		if(ghostDirection == this.DirectionChosen) return "YES";
 		else return "NO";
 	}
 
@@ -275,6 +319,7 @@ public class DataTuple {
 			case "blinkyDist":
 //				returnString = discreteDistance(this.blinkyDist);
 				returnString = discretizeDistance(this.blinkyDist).toString();
+				System.out.println(returnString);
 				break;
 			case "inkyDist":
 //				returnString = discreteDistance(this.inkyDist);
@@ -312,26 +357,16 @@ public class DataTuple {
 			case "sueSameDir":
 				returnString = sameDirection(this.sueDir);
 				break;
+			case "powerPillClose":
+
+				break;
+			case "isJunction":
+				returnString = discreteBoolean(this.isJunction);
+				break;
 
 		}
 		return returnString;
 	}
 
-	/**
-	 * 
-	 * Max score value lifted from highest ranking PacMan controller on PacMan
-	 * vs Ghosts website: http://pacman-vs-ghosts.net/controllers/1104
-	 * 
-	 * @param score
-	 * @return
-	 */
-	public double normalizeCurrentScore(int score) {
-		return ((score - 0) / (double) (82180 - 0)) * (1 - 0) + 0;
-	}
-
-	public DiscreteTag discretizeCurrentScore(int score) {
-		double aux = this.normalizeCurrentScore(score);
-		return DiscreteTag.DiscretizeDouble(aux);
-	}
 
 }

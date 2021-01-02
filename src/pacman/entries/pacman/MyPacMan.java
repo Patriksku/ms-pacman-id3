@@ -93,7 +93,7 @@ public class MyPacMan extends Controller<MOVE> {
 //		attributes.put("inkySameDir", yesOrNo);
 //		attributes.put("pinkySameDir", yesOrNo);
 //		attributes.put("sueSameDir", yesOrNo);
-//		attributes.put("isJunction", yesOrNo);
+		attributes.put("isJunction", yesOrNo);
 
         classOfAttributes.add("UP");
         classOfAttributes.add("LEFT");
@@ -338,9 +338,6 @@ public class MyPacMan extends Controller<MOVE> {
             }
             ArrayList<String> values = new ArrayList<String>(node.children.keySet());
             String currentattributeValue = data.getAttributeValue(node.label);
-
-            System.out.println(node.label);
-
 
             for(String value: values){
                 if(value.equals(currentattributeValue)){
