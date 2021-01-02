@@ -6,6 +6,7 @@ import pacman.controllers.Controller;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
+import javax.xml.crypto.Data;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -18,7 +19,7 @@ public class MyPacMan extends Controller<MOVE> {
     double percentageOfTrainingData = 0.2;
     ArrayList<DataTuple> trainingData = new ArrayList<>();
     ArrayList<DataTuple> testData = new ArrayList<>();
-
+    Node node;
 
     ArrayList<String> classOfAttributes = new ArrayList<>();
     HashMap<String, ArrayList<String>> attributes = new HashMap<String, ArrayList<String>>();
@@ -26,7 +27,12 @@ public class MyPacMan extends Controller<MOVE> {
     public MyPacMan() {
         splitData();
         initClassifierInformation();
-        generateTree(trainingData, attributes);
+        node = generateTree(trainingData, attributes);
+
+    }
+
+    public Node getTree(){
+        return node;
     }
 
     public void splitData() {
@@ -110,22 +116,42 @@ public class MyPacMan extends Controller<MOVE> {
         }
 
         //3.
-        if (attributes.isEmpty()) {
-
+        else if (attributes.isEmpty()) {
             MOVE move = getMajorityClass(trainingData);
             node.setLabel(move.toString());
             node.setLeaf(true);
             return node;
         }
 
-        //4.
+        //4.1
+        else{
+            String attribute = chooseAttribute(trainingData, attributes);
+            HashMap<String, ArrayList<String>> cloneAttributes = (HashMap<String, ArrayList<String>>) attributes.clone();
+            ArrayList<String> attributeValues = cloneAttributes.get(attribute);
+            node.label = attribute;
+            cloneAttributes.remove(attribute);
+            for(int i = 0; i < attributeValues.size(); i++){
 
+                ArrayList<DataTuple> subset = new ArrayList<DataTuple>();
 
+                for(DataTuple data: trainingData){
+                    if(data.getAttributeValue(attribute).equals(attributeValues.get(i))){
+                        subset.add(data);
+                    }
+                }
 
-
-
-        /////
-        return new Node();
+                if(subset.size() == 0){
+                    Node newNode = new Node();
+                    newNode.label = this.getMajorityClass(trainingData).toString();
+                    newNode.setLeaf(true);
+                    node.addChild(new Node(), attributeValues.get(i));
+                }else{
+                    node.addChild(generateTree(subset, cloneAttributes), attributeValues.get(i));
+                }
+            }
+        }
+        node.print(" ");
+        return node;
     }
 
     // Checks if every tuple in D has the same class -> Returns true if so.
@@ -202,7 +228,7 @@ public class MyPacMan extends Controller<MOVE> {
                     // advances counters if a tuple with attribute matching current loop value is found. Saves class as well
                     if(d.getAttributeValue(tempAttributes.get(i)).equals(attributes.get(tempAttributes.get(i)).get(k))){
                         counter++;
-                        switch (data.get(i).DirectionChosen){
+                        switch (d.DirectionChosen){
                             case UP:
                                 up++;
                                 break;
@@ -221,6 +247,11 @@ public class MyPacMan extends Controller<MOVE> {
                         }
                     }
                 }
+                if(counter == 0){
+                    counter = 1;
+
+                }
+
                 //partly calc entropy for this attribute. When loop is done the calculation will be complete
                 localCount = -log2(up/counter)*(up/counter)-log2(down/counter)*(down/counter)-log2(left/counter)*(left/counter)-log2(right/counter)*(right/counter)-log2(neutral/counter)*(neutral/counter);
                 finalCount += -(counter/totalTuples)*localCount;
@@ -290,8 +321,29 @@ public class MyPacMan extends Controller<MOVE> {
 	
 	public MOVE getMove(Game game, long timeDue) 
 	{
-		//Place your game logic here to play the game as Ms Pac-Man
-		
-		return myMove;
+        DataTuple data = new DataTuple(game, null);
+        Node node = this.getTree();
+        String move = "";
+
+        while(true){
+            if(node.isLeaf){
+                move = node.label;
+                break;
+            }
+            ArrayList<String> values = new ArrayList<String>(node.children.keySet());
+            String currentattributeValue = data.getAttributeValue(node.label);
+
+            for(String value: values){
+                if(value.equals(currentattributeValue)){
+                    node = node.children.get(value);
+                    break;
+                }
+            }
+        }
+		return MOVE.valueOf(move);
 	}
+
+    public static void main(String[] args) {
+        new MyPacMan();
+    }
 }
