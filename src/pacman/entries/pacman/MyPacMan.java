@@ -16,7 +16,7 @@ import java.util.*;
  * be placed in this package or sub-packages (e.g., game.entries.pacman.mypackage).
  */
 public class MyPacMan extends Controller<MOVE> {
-    double percentageOfTrainingData = 0.2;
+    double percentageOfTrainingData = 0.1;
     ArrayList<DataTuple> trainingData = new ArrayList<>();
     ArrayList<DataTuple> testData = new ArrayList<>();
     Node node;
@@ -111,6 +111,9 @@ public class MyPacMan extends Controller<MOVE> {
 
             MOVE move = trainingData.get(0).DirectionChosen;
             node.setLabel(move.toString());
+            if(node.label == null){
+                System.out.println(121);
+            }
             node.setLeaf(true);
             return node;
         }
@@ -119,6 +122,9 @@ public class MyPacMan extends Controller<MOVE> {
         else if (attributes.isEmpty()) {
             MOVE move = getMajorityClass(trainingData);
             node.setLabel(move.toString());
+            if(node.label == null){
+                System.out.println(121);
+            }
             node.setLeaf(true);
             return node;
         }
@@ -144,7 +150,7 @@ public class MyPacMan extends Controller<MOVE> {
                     Node newNode = new Node();
                     newNode.label = this.getMajorityClass(trainingData).toString();
                     newNode.setLeaf(true);
-                    node.addChild(new Node(), attributeValues.get(i));
+                    node.addChild(newNode, attributeValues.get(i));
                 }else{
                     node.addChild(generateTree(subset, cloneAttributes), attributeValues.get(i));
                 }
@@ -332,6 +338,9 @@ public class MyPacMan extends Controller<MOVE> {
             }
             ArrayList<String> values = new ArrayList<String>(node.children.keySet());
             String currentattributeValue = data.getAttributeValue(node.label);
+
+            System.out.println(node.label);
+
 
             for(String value: values){
                 if(value.equals(currentattributeValue)){

@@ -63,7 +63,7 @@ public class Executor
 		//run the game in asynchronous mode.
 		boolean visual=true;
 //		exec.runGameTimed(new NearestPillPacMan(),new AggressiveGhosts(),visual);
-		exec.runGameTimed(new MyPacMan(),new StarterGhosts(),visual);
+	//	exec.runGameTimed(new MyPacMan(),new StarterGhosts(),visual);
 	//	exec.runGameTimed(new HumanController(new KeyBoardInput()),new StarterGhosts(),visual);
 		//*/
 		
@@ -85,6 +85,9 @@ public class Executor
 		
 		//run game for data collection
 		/*exec.runGameTimed(new HumanController(new KeyBoardInput()),new StarterGhosts(), true);*/
+		MyPacMan pac = new MyPacMan();
+		//exec.runGameTimed(new DataCollectorController(new KeyBoardInput()),new StarterGhosts(), true);
+		exec.runGameTimed(pac,new StarterGhosts(),visual);
 	}
 	
     /**
