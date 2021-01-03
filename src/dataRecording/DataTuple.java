@@ -96,8 +96,8 @@ public class DataTuple {
 
 		MOVE[] moves = game.getPossibleMoves(this.pacmanPosition);
 
-		for(MOVE moveTemp: moves){
-			switch (moveTemp){
+		for(MOVE moveTemp: moves) {
+			switch (moveTemp) {
 				case LEFT:
 					this.moveLeft = true;
 					break;
@@ -111,8 +111,8 @@ public class DataTuple {
 					this.moveDown = true;
 					break;
 			}
-
 		}
+
 		lastMove = game.getPacmanLastMoveMade();
 		if (game.getGhostLairTime(GHOST.BLINKY) == 0) {
 			this.isBlinkyEdible = game.isGhostEdible(GHOST.BLINKY);
