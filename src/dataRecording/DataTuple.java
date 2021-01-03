@@ -350,11 +350,6 @@ public class DataTuple {
 		else return "NO";
 	}
 
-	public String sameDirection(MOVE ghostDirection) {
-		if(ghostDirection == this.DirectionChosen) return "YES";
-		else return "NO";
-	}
-
 	public String getAttributeValue(String attribute) {
 		String returnString = "";
 
@@ -399,18 +394,6 @@ public class DataTuple {
 			case "sueDir":
 				returnString = this.sueDir.toString();
 				break;
-			case "blinkySameDir":
-				returnString = sameDirection(this.blinkyDir);
-				break;
-			case "inkySameDir":
-				returnString = sameDirection(this.inkyDir);
-				break;
-			case "pinkySameDir":
-				returnString = sameDirection(this.pinkyDir);
-				break;
-			case "sueSameDir":
-				returnString = sameDirection(this.sueDir);
-				break;
 			case "powerPillClose":
 
 				break;
@@ -444,6 +427,36 @@ public class DataTuple {
 				break;
 			case "directionChosen":
 				returnString = this.DirectionChosen.toString();
+				break;
+			case "blinkyVun":
+				if((getAttributeValue("blinkyDist").equals("VERY_LOW") || getAttributeValue("blinkyDist").equals("VERY_LOW")) && isBlinkyEdible){
+					returnString = "vun";
+				}else{
+					returnString = "notVun";
+				}
+				break;
+			case "inkyVun":
+				if((getAttributeValue("inkyDist").equals("VERY_LOW") || getAttributeValue("inkyDist").equals("VERY_LOW")) && isInkyEdible){
+					returnString = "vun";
+				}else{
+					returnString = "notVun";
+				}
+				break;
+
+			case "pinkyVun":
+				if((getAttributeValue("pinkyDist").equals("VERY_LOW") || getAttributeValue("pinkyDist").equals("VERY_LOW")) && isPinkyEdible){
+					returnString = "vun";
+				}else{
+					returnString = "notVun";
+				}
+				break;
+
+			case "sueVun":
+				if((getAttributeValue("sueDist").equals("VERY_LOW") || getAttributeValue("sueDist").equals("VERY_LOW")) && isSueEdible){
+					returnString = "vun";
+				}else{
+					returnString = "notVun";
+				}
 				break;
 
 		}
