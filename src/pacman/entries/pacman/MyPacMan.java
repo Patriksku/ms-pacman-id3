@@ -51,7 +51,39 @@ public class MyPacMan extends Controller<MOVE> {
         }
 
         // Set the remaining as the training data.
-        trainingData = allTheData;
+        trainingData = new ArrayList<DataTuple>(Arrays.asList(DataSaverLoader.LoadPacManData()));
+        trainingData = cleanData(trainingData);
+    }
+
+    public ArrayList<DataTuple> cleanData(ArrayList<DataTuple> data){
+        ArrayList<DataTuple> newData = new ArrayList<DataTuple>();
+        int removedCounter = 0;
+        for(DataTuple nD: data){
+            System.out.println(nD.getAttributeValue("moveLeft"));
+            if(nD.getAttributeValue("moveLeft").equals("NO") && nD.DirectionChosen.toString().equals("LEFT")){
+                removedCounter++;
+
+            }else if(nD.getAttributeValue("moveRight").equals("NO") && nD.DirectionChosen.toString().equals("RIGHT")){
+                removedCounter++;
+
+            }else if(nD.getAttributeValue("moveUp").equals("NO") && nD.DirectionChosen.toString().equals("UP")){
+                removedCounter++;
+
+            }else if(nD.getAttributeValue("moveDown").equals("NO") && nD.DirectionChosen.toString().equals("DOWN")){
+                removedCounter++;
+
+            }
+            else if(nD.DirectionChosen.toString().equals("NEUTRAL")){
+                removedCounter++;
+
+            }else{
+                newData.add(nD);
+            }
+        }
+        System.out.println(removedCounter);
+        return newData;
+
+
     }
 
     public void initClassifierInformation() {
@@ -93,12 +125,12 @@ public class MyPacMan extends Controller<MOVE> {
         //attributes.put("inkySameDir", yesOrNo);
         //attributes.put("pinkySameDir", yesOrNo);
         //attributes.put("sueSameDir", yesOrNo);
-        //attributes.put("isJunction", yesOrNo);
+        attributes.put("isJunction", yesOrNo);
         attributes.put("moveLeft",yesOrNo);
         attributes.put("moveRight",yesOrNo);
         attributes.put("moveUp",yesOrNo);
         attributes.put("moveDown",yesOrNo);
-        //attributes.put("pacmanPosition",discreteDistance);
+        attributes.put("pacmanPosition",discreteDistance);
         attributes.put("lastMove", directions);
         attributes.put("closestPillDir", directions);
         //attributes.put("closestPillDist", discreteDistance);

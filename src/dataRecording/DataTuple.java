@@ -438,10 +438,12 @@ public class DataTuple {
 				break;
 			case "closestPillDir":
 				returnString = closestPillDir.toString();
-				System.out.println(closestPillDir.toString());
 				break;
 			case "closestPillDist":
 				returnString = discretizeDistance(closestPillDist).toString();
+				break;
+			case "directionChosen":
+				returnString = this.DirectionChosen.toString();
 				break;
 
 		}
