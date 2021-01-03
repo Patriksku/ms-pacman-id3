@@ -38,7 +38,7 @@ public class MyPacMan extends Controller<MOVE> {
     public void splitData() {
         DataTuple[] data = DataSaverLoader.LoadPacManData();
         ArrayList<DataTuple> allTheData = new ArrayList<>(Arrays.asList(data));
-
+        allTheData = cleanData(allTheData);
         // The test-size specified will be how large the test data will become.
         int testSize = (int)(allTheData.size() * percentageOfTestData);
 
@@ -56,7 +56,6 @@ public class MyPacMan extends Controller<MOVE> {
 
         // Set the remaining as the training data.
         trainingData = new ArrayList<DataTuple>(Arrays.asList(DataSaverLoader.LoadPacManData()));
-        trainingData = cleanData(trainingData);
     }
 
     // Cleans up the data by removing unwanted tuples, thus increasing the quality of the data.
