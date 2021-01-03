@@ -58,6 +58,8 @@ public class DataTuple {
 	public int inkyDist = -1;
 	public int pinkyDist = -1;
 	public int sueDist = -1;
+	public MOVE closestPillDir;
+	public int closestPillDist;
 
 	public MOVE blinkyDir;
 	public MOVE inkyDir;
@@ -132,6 +134,18 @@ public class DataTuple {
 			this.sueDist = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.SUE));
 		}
 
+		int[] pills = game.getPillIndices();
+		int bestPill = pills[0];
+		int bestPillDistance = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pills[0]);
+		for(int i = 0; i < pills.length; i++){
+			if(bestPillDistance > game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pills[i])){
+				bestPill = pills[i];
+				bestPillDistance = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pills[i]);
+			}
+		}
+		this.closestPillDist = bestPillDistance;
+		this.closestPillDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), bestPill, DM.PATH);
+
 		this.blinkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.BLINKY), DM.PATH);
 		this.inkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.INKY), DM.PATH);
 		this.pinkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.PINKY), DM.PATH);
@@ -177,6 +191,8 @@ public class DataTuple {
 		this.moveUp = Boolean.parseBoolean(dataSplit[28]);
 		this.moveDown = Boolean.parseBoolean(dataSplit[29]);
 		this.lastMove = MOVE.valueOf(dataSplit[30]);
+		this.closestPillDir = MOVE.valueOf(dataSplit[31]);
+		this.closestPillDist = Integer.parseInt(dataSplit[32]);
 
 	}
 
@@ -214,6 +230,8 @@ public class DataTuple {
 		stringbuilder.append(this.moveUp + ";");
 		stringbuilder.append(this.moveDown + ";");
 		stringbuilder.append(this.lastMove + ";");
+		stringbuilder.append(this.closestPillDir + ";");
+		stringbuilder.append(this.closestPillDist + ";");
 
 
 		return stringbuilder.toString();
@@ -416,6 +434,13 @@ public class DataTuple {
 				break;
 			case "lastMove":
 				returnString = lastMove.toString();
+				break;
+			case "closestPillDir":
+				returnString = closestPillDir.toString();
+				//System.out.println(closestPillDir.toString());
+				break;
+			case "closestPillDist":
+				returnString = discretizeDistance(closestPillDist).toString();
 				break;
 
 		}
