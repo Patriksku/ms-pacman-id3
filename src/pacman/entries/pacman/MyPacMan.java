@@ -302,7 +302,7 @@ public class MyPacMan extends Controller<MOVE> {
                     // advances counters if a tuple with attribute matching current loop value is found. Saves class as well
                     if(d.getAttributeValue(tempAttributes.get(i)).equals(attributes.get(tempAttributes.get(i)).get(k))){
                         counter++;
-                        switch (d.DirectionChosen){
+                        switch (d.DirectionChosen) {
                             case UP:
                                 up++;
                                 break;
@@ -321,15 +321,12 @@ public class MyPacMan extends Controller<MOVE> {
                         }
                     }
                 }
-                if(counter == 0){
-                    counter = 1;
 
+                if (counter != 0) {
+                    //partly calc entropy for this attribute. When loop is done the calculation will be complete
+                    localCount = -log2(up/counter)*(up/counter)-log2(down/counter)*(down/counter)-log2(left/counter)*(left/counter)-log2(right/counter)*(right/counter)-log2(neutral/counter)*(neutral/counter);
+                    finalCount += -(counter/totalTuples)*localCount;
                 }
-
-                //partly calc entropy for this attribute. When loop is done the calculation will be complete
-                localCount = -log2(up/counter)*(up/counter)-log2(down/counter)*(down/counter)-log2(left/counter)*(left/counter)-log2(right/counter)*(right/counter)-log2(neutral/counter)*(neutral/counter);
-                finalCount += -(counter/totalTuples)*localCount;
-
             }
 
             //Checks if entropy for current attribute is better than old.
