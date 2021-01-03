@@ -138,7 +138,7 @@ public class DataTuple {
 		int bestPill = pills[0];
 		int bestPillDistance = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pills[0]);
 		for(int i = 0; i < pills.length; i++){
-			if(bestPillDistance > game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pills[i])){
+			if(bestPillDistance < game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pills[i])){
 				bestPill = pills[i];
 				bestPillDistance = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pills[i]);
 			}
@@ -357,6 +357,7 @@ public class DataTuple {
 
 	public String getAttributeValue(String attribute) {
 		String returnString = "";
+
 		switch(attribute) {
 			case "isBlinkyEdible":
 				returnString = discreteBoolean(this.isBlinkyEdible);
@@ -437,7 +438,7 @@ public class DataTuple {
 				break;
 			case "closestPillDir":
 				returnString = closestPillDir.toString();
-				//System.out.println(closestPillDir.toString());
+				System.out.println(closestPillDir.toString());
 				break;
 			case "closestPillDist":
 				returnString = discretizeDistance(closestPillDist).toString();

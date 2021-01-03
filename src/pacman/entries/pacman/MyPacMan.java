@@ -98,7 +98,7 @@ public class MyPacMan extends Controller<MOVE> {
         attributes.put("moveRight",yesOrNo);
         attributes.put("moveUp",yesOrNo);
         attributes.put("moveDown",yesOrNo);
-        attributes.put("pacmanPosition",discreteDistance);
+        //attributes.put("pacmanPosition",discreteDistance);
         attributes.put("lastMove", directions);
         attributes.put("closestPillDir", directions);
         //attributes.put("closestPillDist", discreteDistance);
