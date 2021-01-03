@@ -16,7 +16,7 @@ import java.util.*;
  * be placed in this package or sub-packages (e.g., game.entries.pacman.mypackage).
  */
 public class MyPacMan extends Controller<MOVE> {
-    double percentageOfTrainingData = 0.5;
+    double percentageOfTestData = 0.25;
     ArrayList<DataTuple> trainingData = new ArrayList<>();
     ArrayList<DataTuple> testData = new ArrayList<>();
     Node node;
@@ -28,7 +28,7 @@ public class MyPacMan extends Controller<MOVE> {
         splitData();
         initClassifierInformation();
         node = generateTree(trainingData, attributes);
-
+        printTrainingAccuracy();
     }
 
     public Node getTree(){
@@ -38,12 +38,12 @@ public class MyPacMan extends Controller<MOVE> {
     public void splitData() {
         DataTuple[] data = DataSaverLoader.LoadPacManData();
         ArrayList<DataTuple> allTheData = new ArrayList<>(Arrays.asList(data));
-        int trainingSize = (int)(allTheData.size() * percentageOfTrainingData);
+        int testSize = (int)(allTheData.size() * percentageOfTestData);
 
         Random random = new Random();
 
-        // Go through a percentage of the total data and extract training data.
-        for (int i = 0; i < trainingSize; i++) {
+        // Go through a percentage of the total data and extract test data.
+        for (int i = 0; i < testSize; i++) {
             int thisIndex = random.nextInt(allTheData.size());
 
             testData.add(allTheData.get(thisIndex));
@@ -51,7 +51,7 @@ public class MyPacMan extends Controller<MOVE> {
         }
 
         // Set the remaining as the training data.
-        trainingData = new ArrayList<DataTuple>(Arrays.asList(DataSaverLoader.LoadPacManData()));;
+        trainingData = allTheData;
     }
 
     public void initClassifierInformation() {
@@ -89,12 +89,12 @@ public class MyPacMan extends Controller<MOVE> {
         attributes.put("inkyDir", directions);
         attributes.put("pinkyDir", directions);
         attributes.put("sueDir", directions);
-		//attributes.put("blinkySameDir", yesOrNo);
-		//attributes.put("inkySameDir", yesOrNo);
-		//attributes.put("pinkySameDir", yesOrNo);
-		//attributes.put("sueSameDir", yesOrNo);
-        attributes.put("isJunction", yesOrNo);
-		attributes.put("moveLeft",yesOrNo);
+        //attributes.put("blinkySameDir", yesOrNo);
+        //attributes.put("inkySameDir", yesOrNo);
+        //attributes.put("pinkySameDir", yesOrNo);
+        //attributes.put("sueSameDir", yesOrNo);
+        //attributes.put("isJunction", yesOrNo);
+        attributes.put("moveLeft",yesOrNo);
         attributes.put("moveRight",yesOrNo);
         attributes.put("moveUp",yesOrNo);
         attributes.put("moveDown",yesOrNo);
@@ -329,12 +329,52 @@ public class MyPacMan extends Controller<MOVE> {
         return bestMove;
     }
 
+    public void printTrainingAccuracy() {
+        double accuracy = 0;
+        double correctMoves = 0;
 
+        MOVE correctMove = null;
+        MOVE generatedMove = null;
 
-	private MOVE myMove=MOVE.NEUTRAL;
-	
-	public MOVE getMove(Game game, long timeDue) 
-	{
+        for (int i = 0; i < testData.size(); i++) {
+            correctMove = testData.get(i).DirectionChosen;
+
+            // Generated move.
+            Node node = this.getTree();
+            String move = "";
+
+            while (true) {
+                if (node.isLeaf) {
+                    move = MOVE.valueOf(node.label).toString();
+                    generatedMove = MOVE.valueOf(move);
+                    break;
+                }
+
+                ArrayList<String> values = new ArrayList<String>(node.children.keySet());
+                String currentattributeValue = testData.get(i).getAttributeValue(node.label);
+
+                for(String value: values){
+                    if(value.equals(currentattributeValue)){
+                        node = node.children.get(value);
+                        break;
+                    }
+                }
+            }
+
+            if (correctMove.toString().equals(generatedMove.toString())) {
+                correctMoves++;
+            }
+
+        }
+
+        accuracy = (correctMoves / testData.size());
+        System.out.println("ACCURACY: " + accuracy);
+    }
+
+    private MOVE myMove=MOVE.NEUTRAL;
+
+    public MOVE getMove(Game game, long timeDue)
+    {
         DataTuple data = new DataTuple(game, null);
         Node node = this.getTree();
         String move = "";
@@ -355,9 +395,9 @@ public class MyPacMan extends Controller<MOVE> {
             }
         }
 
-        //System.out.println(move);
-		return MOVE.valueOf(move);
-	}
+        System.out.println(move);
+        return MOVE.valueOf(move);
+    }
 
     public static void main(String[] args) {
         new MyPacMan();
