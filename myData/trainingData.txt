@@ -1,1 +1,1 @@
-RIGHT;0;0;1255;3;500;283;283;175;3;true;true;true;false;158;187;142;11;RIGHT;RIGHT;RIGHT;LEFT;1293;220;4;false;true;true;false;false;RIGHT;RIGHT;193;
+RIGHT;0;0;1238;3;740;1187;1187;146;4;false;false;false;false;142;168;148;142;LEFT;LEFT;RIGHT;LEFT;1293;220;4;false;true;true;false;false;RIGHT;LEFT;31;

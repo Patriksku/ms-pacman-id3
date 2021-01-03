@@ -134,11 +134,11 @@ public class DataTuple {
 			this.sueDist = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.SUE));
 		}
 
-		int[] pills = game.getPillIndices();
+		int[] pills = game.getActivePillsIndices();
 		int bestPill = pills[0];
 		int bestPillDistance = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pills[0]);
 		for(int i = 0; i < pills.length; i++){
-			if(bestPillDistance < game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pills[i])){
+			if(bestPillDistance > game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pills[i])){
 				bestPill = pills[i];
 				bestPillDistance = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), pills[i]);
 			}
